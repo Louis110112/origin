@@ -15,9 +15,23 @@ app.get('/', (req, res) => {
     res.redirect('/movies')
 })
 
+// app.get('/movies', (req, res) => {
+//     const keyword = req.query.search
+//     const matchedMovies = movies.filter((movie) => movie.title.toLowerCase().includes(keyword.toLowerCase()))
+//     res.render('index', { movies: matchedMovies, BASE_IMG_URL, keyword })
+// })
+
+
 app.get('/movies', (req, res) => {
-    res.render('index', { movies: movies, BASE_IMG_URL })
+    const keyword = req.query.search || ''
+    const matchedMovies = movies.filter((mv) => Object.values(mv).some((property) => {
+        if (typeof property === 'string') {
+            return property.toLowerCase().includes(keyword.toLowerCase())
+        }
+    }))
+    res.render('index', { movies: matchedMovies, BASE_IMG_URL, keyword })
 })
+
 
 app.get('/movie/:id', (req, res) => {
     const id = req.params.id
